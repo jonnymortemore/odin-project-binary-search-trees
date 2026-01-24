@@ -11,32 +11,47 @@ export class Tree {
                 treeRoot = new Node(value);
                 console.log(treeRoot)
             } else {
-                traverseTree(treeRoot, value)
+                this.#traverseTreeAndInsert(treeRoot, value)
             }
         }
         this.prettyPrint(treeRoot)
         return treeRoot
 
-        function traverseTree(node, value) {
-            if (node.value === value) {
+        
+
+    }
+
+    #traverseTreeAndInsert(node, value) {
+        if (node.value === value) {
+            //to avoid duplicate values
+            return
+        }
+        if (node.value > value) {
+            
+            if (node.right === null) {
+                //found right end
+                node.right = new Node(value)
                 return
             }
-            if (node.value > value) {
-                if (node.right === null) {
-                    node.right = new Node(value)
-                    return
-                }
-                traverseTree(node.right, value)
-            }
-            if (node.value < value) {
-                if (node.left === null) {
-                    node.left = new Node(value)
-                    return
-                }
-                traverseTree(node.left, value)
-            }
-
+            this.#traverseTreeAndInsert(node.right, value)
         }
+        if (node.value < value) {
+            if (node.left === null) {
+                //found left end
+                node.left = new Node(value)
+                return
+            }
+            this.#traverseTreeAndInsert(node.left, value)
+        }
+
+    }
+
+    insert(value) {
+        this.#traverseTreeAndInsert(this.root, value)
+        this.prettyPrint(this.root)
+    }
+
+    delete(value) {
 
     }
 
