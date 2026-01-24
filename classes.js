@@ -1,88 +1,116 @@
-
 export class Tree {
     constructor(array) {
         this.root = this.buildTree(array);
     }
 
     buildTree(array) {
-        let treeRoot = null
+        let treeRoot = null;
         for (const value of array) {
             if (treeRoot === null) {
                 treeRoot = new Node(value);
-                console.log(treeRoot)
             } else {
-                this.#traverseTreeAndInsert(treeRoot, value)
+                this.#traverseTreeAndInsert(treeRoot, value);
             }
         }
-        this.prettyPrint(treeRoot)
-        return treeRoot
-
-        
-
+        return treeRoot;
     }
 
     #traverseTreeAndInsert(node, value) {
         if (node.value === value) {
             //to avoid duplicate values
-            return
+            return;
         }
         if (value > node.value) {
             if (node.right === null) {
                 //found right end
-                node.right = new Node(value)
-                return
+                node.right = new Node(value);
+                return;
             }
-            this.#traverseTreeAndInsert(node.right, value)
+            this.#traverseTreeAndInsert(node.right, value);
         }
         if (value < node.value) {
             if (node.left === null) {
                 //found left end
-                node.left = new Node(value)
-                return
+                node.left = new Node(value);
+                return;
             }
-            this.#traverseTreeAndInsert(node.left, value)
+            this.#traverseTreeAndInsert(node.left, value);
         }
-
     }
 
     insert(value) {
-        this.#traverseTreeAndInsert(this.root, value)
-        this.prettyPrint(this.root)
+        this.#traverseTreeAndInsert(this.root, value);
     }
 
     delete(value) {
         //https://en.wikipedia.org/wiki/Binary_search_tree
-        traverseTreeAndDelete(this.root, value);
+        this.root = traverseTreeAndDelete(this.root, value);
 
         function traverseTreeAndDelete(node, value) {
             if (node === null) {
-                //found end without finding value
-                return
+                //found end of tree
+                return null;
             }
-            if(node.value === value) {
-                //delete
-                return
-            }
-            if (value > node.value ) {
-                this.traverseTreeAndDelete(node.right, value)
+            if (value > node.value) {
+                //traverse right
+                node.right = traverseTreeAndDelete(node.right, value);
             }
             if (value < node.value) {
-                this.traverseTreeAndDelete(node.left, value)
+                //traverse left
+                node.left = traverseTreeAndDelete(node.left, value);
             }
+            //value found, DELETE
+            if (node.value === value) {
+                if (node.right === null) {
+                    //this still works because if left is also null - null is returned anyway.
+                    return node.left;
+                }
+                if (node.left === null) {
+                    return node.right;
+                } else {
+                    //has both left and right children - find inorder successor (the next biggest value in the right child branch)
+                    //search the right half for the next biggest number and swap that value with the current node
+                    const smallestSuccessor = findSmallestSuccessor(node.right);
+                    node.value = smallestSuccessor;
+                    //then search through the right half of the tree and delete that node (using this function recursively to handle any children)
+                    node.right = traverseTreeAndDelete(
+                        node.right,
+                        smallestSuccessor,
+                    );
+                }
+            }
+            //because value is swapped - return this node
+            return node;
         }
 
+        function findSmallestSuccessor(node) {
+            //recursively look through the left most branches of children as those values will always be the smallest
+            //until you create the end of the tree - this number by definiation will be the lowest value in the right most part of the tree
+            if (node.left === null) {
+                return node.value;
+            }
+            return findSmallestSuccessor(node.left);
+        }
     }
 
-    prettyPrint(node, prefix = '', isLeft = true) {
+    prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node === null) {
             return;
         }
         if (node.right !== null) {
-            this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+            this.prettyPrint(
+                node.right,
+                `${prefix}${isLeft ? "│   " : "    "}`,
+                false,
+            );
         }
-        console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
+        console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.value}`);
         if (node.left !== null) {
-            this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+            this.prettyPrint(
+                node.left,
+                `${prefix}${isLeft ? "    " : "│   "}`,
+                true,
+            );
         }
     }
 }
