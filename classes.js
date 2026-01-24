@@ -26,8 +26,7 @@ export class Tree {
             //to avoid duplicate values
             return
         }
-        if (node.value > value) {
-            
+        if (value > node.value) {
             if (node.right === null) {
                 //found right end
                 node.right = new Node(value)
@@ -35,7 +34,7 @@ export class Tree {
             }
             this.#traverseTreeAndInsert(node.right, value)
         }
-        if (node.value < value) {
+        if (value < node.value) {
             if (node.left === null) {
                 //found left end
                 node.left = new Node(value)
@@ -52,6 +51,25 @@ export class Tree {
     }
 
     delete(value) {
+        //https://en.wikipedia.org/wiki/Binary_search_tree
+        traverseTreeAndDelete(this.root, value);
+
+        function traverseTreeAndDelete(node, value) {
+            if (node === null) {
+                //found end without finding value
+                return
+            }
+            if(node.value === value) {
+                //delete
+                return
+            }
+            if (value > node.value ) {
+                this.traverseTreeAndDelete(node.right, value)
+            }
+            if (value < node.value) {
+                this.traverseTreeAndDelete(node.left, value)
+            }
+        }
 
     }
 
