@@ -94,49 +94,58 @@ export class Tree {
     }
 
     findValue(value) {
-        return traverseTreeAndReturn(this.root)
-        
+        return traverseTreeAndReturn(this.root);
+
         function traverseTreeAndReturn(node) {
             if (node.left === null && node.right === null) {
-                return null
+                return null;
             }
             if (node.value === value) {
-                return node
+                return node;
             }
             if (value > node.value) {
-                return traverseTreeAndReturn(node.right)
+                return traverseTreeAndReturn(node.right);
             }
             if (value < node.value) {
-                return traverseTreeAndReturn(node.left)
+                return traverseTreeAndReturn(node.left);
             }
         }
     }
 
     levelOrderForEach(callback) {
         if (typeof callback !== "function") {
-            throw new Error("callback is not a function!")
+            throw new Error("callback is not a function!");
         }
-        levelOrderTraverseInteration(this.root)
+        levelOrderTraverseInteration(this.root);
 
         function levelOrderTraverseInteration(root) {
             if (root === null) {
-                return
+                return;
             }
-            const queue = [root]
+            const queue = [root];
+
             while (queue.length > 0) {
                 const currentNode = queue.shift();
                 if (currentNode !== null) {
                     queue.push(currentNode.left, currentNode.right);
                     callback(currentNode);
                 }
-                
             }
         }
+        
+        //levelOrderTraverseRecursion([this.root])
 
-        function levelOrderTraverseRecursion(node, queue) {
-
+        function levelOrderTraverseRecursion(queue) {
+            if (queue.length === 0) {
+                return;
+            }
+            const currentNode = queue.shift();
+            if (currentNode !== null) {
+                queue.push(currentNode.left, currentNode.right);
+                callback(currentNode);
+            }
+            levelOrderTraverseRecursion(queue);
         }
-
     }
 
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
