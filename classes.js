@@ -192,6 +192,66 @@ export class Tree {
         }
     }
 
+    height(value) {
+
+        //find the node - no need to find it with new code
+        const foundNode = this.findValue(value); 
+
+        //check if null - if so return 
+        if (foundNode === null) {
+            return null
+        }
+        
+        //return height
+        return traverseForHeight(foundNode)
+
+        function traverseForHeight(node, height = -1) {
+            //height starts as -1 as starting node counts itself
+            //if reached end - return the height
+            if (node === null) {
+                return height
+            }
+
+            //add to height from that node onwards
+            height += 1;
+
+            //check the height of the left tree and then the right tree
+            const leftHeight = traverseForHeight(node.left, height)
+            const rightHeight = traverseForHeight(node.right, height)
+            
+            //whichever has the highest value - return
+            if(leftHeight > rightHeight) {
+                return leftHeight
+            }
+
+            return rightHeight
+
+        }
+    }
+
+
+    depth(value) {
+
+        return traverseForDepth(this.root)
+
+        function traverseForDepth(node, height = 0) {
+            if (node === null) {
+                return null
+            }
+            height += 1;
+
+            if(node.value === value) {
+                return height
+            }
+            if(value > node.value) {
+                return traverseForDepth(node.right, height)
+            }
+            if(value < node.value) {
+                return traverseForDepth(node.left, height)
+            }
+        }
+    }
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node === null) {
             return;
