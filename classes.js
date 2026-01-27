@@ -93,6 +93,25 @@ export class Tree {
         }
     }
 
+    findValue(value) {
+        return traverseTreeAndReturn(this.root)
+        
+        function traverseTreeAndReturn(node) {
+            if (node.left === null && node.right === null) {
+                return null
+            }
+            if (node.value === value) {
+                return node
+            }
+            if (value > node.value) {
+                return traverseTreeAndReturn(node.right)
+            }
+            if (value < node.value) {
+                return traverseTreeAndReturn(node.left)
+            }
+        }
+    }
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node === null) {
             return;
