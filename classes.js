@@ -112,6 +112,26 @@ export class Tree {
         }
     }
 
+    levelOrderForEach(callback) {
+        if (typeof callback !== "function") {
+            throw new Error("callback is not a function!")
+        }
+        levelOrderTraverseInteration(this.root)
+
+        function levelOrderTraverseInteration(root) {
+            if (root === null) {
+                return
+            }
+            const queue = [root]
+            while (queue.length > 0) {
+                const currentNode = queue.shift();
+                queue.push(currentNode.left, currentNode.right);
+                callback(currentNode);
+            }
+        }
+
+    }
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node === null) {
             return;
