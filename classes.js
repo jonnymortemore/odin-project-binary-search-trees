@@ -132,7 +132,7 @@ export class Tree {
                 }
             }
         }
-        
+
         //levelOrderTraverseRecursion([this.root])
 
         function levelOrderTraverseRecursion(queue) {
@@ -145,6 +145,50 @@ export class Tree {
                 callback(currentNode);
             }
             levelOrderTraverseRecursion(queue);
+        }
+    }
+
+    preOrderForEach(callback) {
+        //root -> left tree -> right tree
+
+        traverseTree(this.root);
+
+        function traverseTree(node) {
+            if (node === null) {
+                return;
+            }
+            callback(node);
+            traverseTree(node.left);
+            traverseTree(node.right);
+        }
+    }
+
+    inOrderForEach(callback) {
+        //left tree -> root -> right tree
+        traverseTree(this.root);
+
+        function traverseTree(node) {
+            if (node === null) {
+                return;
+            }
+            traverseTree(node.left);
+            callback(node);
+            traverseTree(node.right);
+        }
+    }
+
+    postOrderForEach(callback) {
+        // right tree -> root -> left tree
+        traverseTree(this.root);
+
+        function traverseTree(node) {
+            if (node === null) {
+                return;
+            }
+
+            traverseTree(node.right);
+            callback(node);
+            traverseTree(node.left);
         }
     }
 
