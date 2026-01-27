@@ -125,9 +125,16 @@ export class Tree {
             const queue = [root]
             while (queue.length > 0) {
                 const currentNode = queue.shift();
-                queue.push(currentNode.left, currentNode.right);
-                callback(currentNode);
+                if (currentNode !== null) {
+                    queue.push(currentNode.left, currentNode.right);
+                    callback(currentNode);
+                }
+                
             }
+        }
+
+        function levelOrderTraverseRecursion(node, queue) {
+
         }
 
     }
