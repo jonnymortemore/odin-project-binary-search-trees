@@ -290,6 +290,20 @@ export class Tree {
 
     }
 
+    rebalance() {
+        //return if balanced
+        if (this.isBalanced()) {
+            return
+        }
+        
+        const reorderedTreeArray = []
+
+        this.inOrderForEach((value) => reorderedTreeArray.push(value))
+
+
+        this.buildTree(reorderedTreeArray)
+    }
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node === null) {
             return;
