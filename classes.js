@@ -128,7 +128,7 @@ export class Tree {
                 const currentNode = queue.shift();
                 if (currentNode !== null) {
                     queue.push(currentNode.left, currentNode.right);
-                    callback(currentNode);
+                    callback(currentNode.value);
                 }
             }
         }
@@ -142,7 +142,7 @@ export class Tree {
             const currentNode = queue.shift();
             if (currentNode !== null) {
                 queue.push(currentNode.left, currentNode.right);
-                callback(currentNode);
+                callback(currentNode.value);
             }
             levelOrderTraverseRecursion(queue);
         }
@@ -157,7 +157,7 @@ export class Tree {
             if (node === null) {
                 return;
             }
-            callback(node);
+            callback(node.value);
             traverseTree(node.left);
             traverseTree(node.right);
         }
@@ -172,7 +172,7 @@ export class Tree {
                 return;
             }
             traverseTree(node.left);
-            callback(node);
+            callback(node.value);
             traverseTree(node.right);
         }
     }
@@ -187,7 +187,7 @@ export class Tree {
             }
 
             traverseTree(node.right);
-            callback(node);
+            callback(node.value);
             traverseTree(node.left);
         }
     }
@@ -228,7 +228,6 @@ export class Tree {
 
         }
     }
-
 
     depth(value) {
 
