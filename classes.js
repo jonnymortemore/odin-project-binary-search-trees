@@ -251,6 +251,45 @@ export class Tree {
         }
     }
 
+    isBalanced() {
+        const FAILED = -1
+        const ACCEPTABLE_HEIGHT = 1
+        
+        if (traverseForBalance(this.root) === -1) {
+            return false
+        }
+
+        return true
+
+        function traverseForBalance(node) {
+            
+            if (node === null) {
+                return 0
+            }
+            //check left
+            const leftHeight = traverseForBalance(node.left)
+            //left half not balanced
+            if (leftHeight === FAILED) return FAILED
+
+            //check right
+            const rightHeight = traverseForBalance(node.right)
+            //right half not balanced
+            if (rightHeight === FAILED) return FAILED
+
+            //compare left and right 
+            const heightDifference = Math.abs(leftHeight - rightHeight)
+
+            if(heightDifference > ACCEPTABLE_HEIGHT) {
+                return FAILED
+            }
+
+            //pick the highest height from left or right trees add 1 to height to include itself in the height
+            return Math.max(leftHeight, leftHeight) + 1
+
+        }
+
+    }
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node === null) {
             return;
