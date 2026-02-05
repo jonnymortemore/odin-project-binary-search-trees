@@ -3,43 +3,69 @@ export class Tree {
         this.root = this.buildTree(array);
     }
 
+
+    //THIS IS INCORRECT - TREE MADE IS NOT BALANCED - FIX!
     buildTree(array) {
-        let treeRoot = null;
-        for (const value of array) {
-            if (treeRoot === null) {
-                treeRoot = new Node(value);
-            } else {
-                this.#traverseTreeAndInsert(treeRoot, value);
-            }
+        //sort array
+        //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+        const sortedArray = array.sort((a, b) => a - b);
+        
+        //remove duplicates by changing to set and then immediately changing back to an array
+        const finalArray = [...new Set(sortedArray)];
+        console.log(finalArray)
+        const treeRoot = buildBalancedTreeRec(finalArray, 0, finalArray.length - 1);
+
+        return treeRoot
+
+        function buildBalancedTreeRec(array, start, end) {
+            //if no array left return null
+            if (start > end) return null
+
+            //find middle
+            const mid = Math.floor(start + (end - start) / 2)
+            //create root node
+            const root = new Node(array[mid])
+
+            //recursively check left of root
+            root.left = buildBalancedTreeRec(array, start, mid - 1);
+            //recursively check right of root
+            root.right = buildBalancedTreeRec(array, mid + 1, end);
+
+            return root
+
         }
-        return treeRoot;
     }
 
-    #traverseTreeAndInsert(node, value) {
-        if (node.value === value) {
-            //to avoid duplicate values
-            return;
-        }
-        if (value > node.value) {
-            if (node.right === null) {
-                //found right end
-                node.right = new Node(value);
-                return;
-            }
-            this.#traverseTreeAndInsert(node.right, value);
-        }
-        if (value < node.value) {
-            if (node.left === null) {
-                //found left end
-                node.left = new Node(value);
-                return;
-            }
-            this.#traverseTreeAndInsert(node.left, value);
-        }
-    }
+
+
 
     insert(value) {
-        this.#traverseTreeAndInsert(this.root, value);
+        traverseTreeAndInsert(this.root, value);
+        
+
+
+        function traverseTreeAndInsert(node, value) {
+            if (node.value === value) {
+                //to avoid duplicate values
+                return;
+            }
+            if (value > node.value) {
+                if (node.right === null) {
+                    //found right end
+                    node.right = new Node(value);
+                    return;
+                }
+                traverseTreeAndInsert(node.right, value);
+            }
+            if (value < node.value) {
+                if (node.left === null) {
+                    //found left end
+                    node.left = new Node(value);
+                    return;
+                }
+                traverseTreeAndInsert(node.left, value);
+            }
+        }
     }
 
     delete(value) {
@@ -300,8 +326,8 @@ export class Tree {
 
         this.inOrderForEach((value) => reorderedTreeArray.push(value))
 
-
-        this.buildTree(reorderedTreeArray)
+        this.root = this.buildTree(reorderedTreeArray)
+        
     }
 
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
