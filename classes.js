@@ -3,46 +3,43 @@ export class Tree {
         this.root = this.buildTree(array);
     }
 
-
     //THIS IS INCORRECT - TREE MADE IS NOT BALANCED - FIX!
     buildTree(array) {
         //sort array
         //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
         const sortedArray = array.sort((a, b) => a - b);
-        
+
         //remove duplicates by changing to set and then immediately changing back to an array
         const finalArray = [...new Set(sortedArray)];
-        console.log(finalArray)
-        const treeRoot = buildBalancedTreeRec(finalArray, 0, finalArray.length - 1);
+        console.log(finalArray);
+        const treeRoot = buildBalancedTreeRec(
+            finalArray,
+            0,
+            finalArray.length - 1,
+        );
 
-        return treeRoot
+        return treeRoot;
 
         function buildBalancedTreeRec(array, start, end) {
             //if no array left return null
-            if (start > end) return null
+            if (start > end) return null;
 
             //find middle
-            const mid = Math.floor(start + (end - start) / 2)
+            const mid = Math.floor(start + (end - start) / 2);
             //create root node
-            const root = new Node(array[mid])
+            const root = new Node(array[mid]);
 
             //recursively check left of root
             root.left = buildBalancedTreeRec(array, start, mid - 1);
             //recursively check right of root
             root.right = buildBalancedTreeRec(array, mid + 1, end);
 
-            return root
-
+            return root;
         }
     }
 
-
-
-
     insert(value) {
         traverseTreeAndInsert(this.root, value);
-        
-
 
         function traverseTreeAndInsert(node, value) {
             if (node.value === value) {
@@ -219,115 +216,108 @@ export class Tree {
     }
 
     height(value) {
-
         //find the node - no need to find it with new code
-        const foundNode = this.findValue(value); 
+        const foundNode = this.findValue(value);
 
-        //check if null - if so return 
+        //check if null - if so return
         if (foundNode === null) {
-            return null
+            return null;
         }
-        
+
         //return height
-        return traverseForHeight(foundNode)
+        return traverseForHeight(foundNode);
 
         function traverseForHeight(node, height = -1) {
             //height starts as -1 as starting node counts itself
             //if reached end - return the height
             if (node === null) {
-                return height
+                return height;
             }
 
             //add to height from that node onwards
             height += 1;
 
             //check the height of the left tree and then the right tree
-            const leftHeight = traverseForHeight(node.left, height)
-            const rightHeight = traverseForHeight(node.right, height)
-            
+            const leftHeight = traverseForHeight(node.left, height);
+            const rightHeight = traverseForHeight(node.right, height);
+
             //whichever has the highest value - return
-            if(leftHeight > rightHeight) {
-                return leftHeight
+            if (leftHeight > rightHeight) {
+                return leftHeight;
             }
 
-            return rightHeight
-
+            return rightHeight;
         }
     }
 
     depth(value) {
-
-        return traverseForDepth(this.root)
+        return traverseForDepth(this.root);
 
         function traverseForDepth(node, height = 0) {
             if (node === null) {
-                return null
+                return null;
             }
             height += 1;
 
-            if(node.value === value) {
-                return height
+            if (node.value === value) {
+                return height;
             }
-            if(value > node.value) {
-                return traverseForDepth(node.right, height)
+            if (value > node.value) {
+                return traverseForDepth(node.right, height);
             }
-            if(value < node.value) {
-                return traverseForDepth(node.left, height)
+            if (value < node.value) {
+                return traverseForDepth(node.left, height);
             }
         }
     }
 
     isBalanced() {
-        const FAILED = -1
-        const ACCEPTABLE_HEIGHT = 1
-        
+        const FAILED = -1;
+        const ACCEPTABLE_HEIGHT = 1;
+
         if (traverseForBalance(this.root) === -1) {
-            return false
+            return false;
         }
 
-        return true
+        return true;
 
         function traverseForBalance(node) {
-            
             if (node === null) {
-                return 0
+                return 0;
             }
             //check left
-            const leftHeight = traverseForBalance(node.left)
+            const leftHeight = traverseForBalance(node.left);
             //left half not balanced
-            if (leftHeight === FAILED) return FAILED
+            if (leftHeight === FAILED) return FAILED;
 
             //check right
-            const rightHeight = traverseForBalance(node.right)
+            const rightHeight = traverseForBalance(node.right);
             //right half not balanced
-            if (rightHeight === FAILED) return FAILED
+            if (rightHeight === FAILED) return FAILED;
 
-            //compare left and right 
-            const heightDifference = Math.abs(leftHeight - rightHeight)
+            //compare left and right
+            const heightDifference = Math.abs(leftHeight - rightHeight);
 
-            if(heightDifference > ACCEPTABLE_HEIGHT) {
-                return FAILED
+            if (heightDifference > ACCEPTABLE_HEIGHT) {
+                return FAILED;
             }
 
             //pick the highest height from left or right trees add 1 to height to include itself in the height
-            return Math.max(leftHeight, leftHeight) + 1
-
+            return Math.max(leftHeight, leftHeight) + 1;
         }
-
     }
 
     rebalance() {
         //return if balanced
         if (this.isBalanced()) {
-            return
+            return;
         }
-        
-        const reorderedTreeArray = []
 
-        this.inOrderForEach((value) => reorderedTreeArray.push(value))
+        const reorderedTreeArray = [];
 
-        this.root = this.buildTree(reorderedTreeArray)
-        
+        this.inOrderForEach((value) => reorderedTreeArray.push(value));
+
+        this.root = this.buildTree(reorderedTreeArray);
     }
 
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
